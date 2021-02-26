@@ -10,6 +10,17 @@ class box:
         self.cubeWidth = cDimensions
         self.rollWidth = rDimensions
 
+    def checkWaste(self):
+
+        rWidth = self.accessRoll()
+        cWidth = self.accessCube()
+
+    def accessCube(self):
+        return self.cubeWidth
+
+    def accessRoll(self):
+        return self.rollWidth
+
 
 def main(sysArgs):
     if len(sysArgs) == 2:
