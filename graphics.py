@@ -5,7 +5,7 @@ import numpy
 
 
 class handler:
-    
+
     data = []
 
     def __init__(self, dataSet):

@@ -1,7 +1,7 @@
 import sys
 
 
-class box:
+class Box:
     #Class defining the dimensions of the box and roll
     cubeWidth = 0.0
     rollWidth = 0.0
@@ -12,8 +12,13 @@ class box:
 
     def checkWaste(self):
 
+        waste = 0
         rWidth = self.accessRoll()
         cWidth = self.accessCube()
+        numBoxes = rWidth / cWidth
+        if rWidth % netDimensions[0]:
+            
+
 
     def accessCube(self):
         return self.cubeWidth
