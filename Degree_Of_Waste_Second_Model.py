@@ -51,9 +51,28 @@ else:
 
 #This calculates the percentage of wasted cardboard overall with this template
 # =============================================================================
+
+
+
+if K == 3*V2:
+    NoT = R1//X2
+
+else:    
+    NoT = R1//X1
+
+print(NoT)
+
+F = (K+(6*NoT))/((NoT*12)+K)
+
+
+
+
+print("proportion of Wasted Cardboard:" , F)
+
 NoT = R1 // X1
 F = (K + (6 * NoT)) / ((NoT * 12) + K)
 print("proportion of Wasted Cardboard:", F)
+
 
 
 # Program will crash with string inputs
