@@ -1,0 +1,3 @@
+length - 5
+definition - 100
+range - 20
