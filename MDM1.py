@@ -3,6 +3,14 @@ import configure as cg
 #import wasteGraphs as wg
 
 
+def calcWaste(cubeD, netD, rollW, rollL, orientation):
+    print(cubeD, netD, rollW, rollL, orientation)
+    if orientation:
+        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+    else:
+        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+
+
 class box:
     #Class defining the dimensions of the box and roll
     cubeWidth = 0.0
@@ -40,8 +48,8 @@ class efficientNet(box):
     netDimensions = []
 
     def __init__(self, cDimensions, rWidth, rLength):
-        box.init(self, cDimensions, rWidth, rLength)
-        self.netDimensions = [2 * box.accessCube(self), (4 * box.accessCube(self))]
+        box.__init__(self, cDimensions, rWidth, rLength)
+        self.netDimensions = [2, 4]
 
     def accessNet(self):
         nD = self.netDimensions
@@ -50,26 +58,23 @@ class efficientNet(box):
     def checkOrientation(self):
         #Retturns true if having the x-side agains the bottom of the roll
         #is most efficient if not returns false
-        xWaste = self.accessNet(self)[0] % box.accessRoll(self)
-        yWaste = self.accessNet(self)[1] + 0.1 * box.accessCube() % box.accessRoll(self)
-        if xWaste <= yWaste:
+        xWaste = (self.accessNet()[0] * self.accessCube()) % self.accessRollW()
+        yWaste = (self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube()) % self.accessRollW()
+        if xWaste >= yWaste:
             return True
         else:
             return False
 
     def checkWaste(self):
-
-        if self.checkOrientation():
-            waste = areaOfRoll - ((self.accessNet()[0] * self.accessNet()[1]) + (0.1 * box.accessCube() * box.accessCube())) + (self.accessNet()[0] % box.accessRoll() * box.accessRollL())
-            return waste
-        else:
-            waste = areaOfRoll - ((self.accessNet()[0] * self.accessNet()[1]) + (0.1 * box.accessCube() * box.accessCube())) + (self.accessNet()[0] % box.accessRoll() * box.accessRollW())
-            return waste
+        orientation = self.checkOrientation()
+        waste = calcWaste(self.accessCube(), self.accessNet(), self.accessRollW(), self.accessRollL(), orientation)
+        return waste
 
 
 def main(sysArgs):
     if len(sysArgs) == 2:
-        box(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
+        b = efficientNet(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
+        print(b.checkWaste())
     else:
         print("ERORR: expected 2 inputs")
 
