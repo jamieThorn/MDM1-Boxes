@@ -5,10 +5,14 @@ import configure as cg
 
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
     print(cubeD, netD, rollW, rollL, orientation)
+    areaOfRoll = rollL * rollW
     if orientation:
-        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * ((netD[1] * cubeD) // rollL) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        print(rollL // (netD[1] * cubeD))
+        usedArea = ((netD[0] * cubeD) // rollW) * (rollL // (netD[1] * cubeD)) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
-        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * ((netD[0] * cubeD) // rollL) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        usedArea = ((netD[1] * cubeD) // rollW) * (rollL // (netD[0] * cubeD)) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+    print(usedArea)
+    return areaOfRoll - usedArea
 
 
 class box:
