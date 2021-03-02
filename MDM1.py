@@ -6,9 +6,9 @@ import configure as cg
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
     print(cubeD, netD, rollW, rollL, orientation)
     if orientation:
-        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * ((netD[1] * cubeD) // rollL) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
-        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * ((netD[0] * cubeD) // rollL) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
 
 
 class box:
@@ -59,8 +59,10 @@ class efficientNet(box):
         #Retturns true if having the x-side agains the bottom of the roll
         #is most efficient if not returns false
         xWaste = (self.accessNet()[0] * self.accessCube()) % self.accessRollW()
+        print(xWaste)
         yWaste = (self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube()) % self.accessRollW()
-        if xWaste >= yWaste:
+        print(yWaste)
+        if xWaste <= yWaste:
             return True
         else:
             return False
