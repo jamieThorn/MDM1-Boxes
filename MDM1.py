@@ -54,15 +54,14 @@ class efficientNet(box):
     #size of the cube
     netDimensions = []
 
-# Defines the dimensions of the net by taking cube width and multiplying by 2
-# for the width of the net and multiplying by 4 for the length of the net
+# Initialises the class and takes the dimensions of the net in a list
 
     def __init__(self, cDimensions, rWidth, rLength):
         box.__init__(self, cDimensions, rWidth, rLength)
         self.netDimensions = [2, 4]
-        
+
 # Accesses the net dimensions
-        
+
     def accessNet(self):
         nD = self.netDimensions
         return nD
@@ -87,27 +86,30 @@ class efficientNet(box):
         orientation = self.checkOrientation()
         waste = calcWaste(self.accessCube(), self.accessNet(), self.accessRollW(), self.accessRollL(), orientation)
         return waste
+# Uses the wasteGraphs scipt to generate graphs showing why the user may
+# wish to alter there cube size or rollw Width
+    def displayGraphs(self):
+    h = wasteGraphs.handler()
+    orientation = self.checkOrientation()
+    cubeGraphConstants = [self.accessNet(), self.accessRollW(), self.accessRollL(), orientation]
+    rollWidthGraphConstants = [self.accessCube(), self.accessNet(), self.accessRollL(), orientation]
+    h.compareVariablebCube(calcWaste, self.accessCube(), cubeGraphConstants)
+    h.compareVariableWidth(calcWaste, self.accessRollW(), rollWidthGraphConstants)
 
 # Checks that 2 inputs are inputted and calculates and prints the wasted
-# cardboard
+# cardboard and shows graphs of what happens as the cube and roll values vary
 
 def main(sysArgs):
     if len(sysArgs) == 2:
         b = efficientNet(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
         print(b.checkWaste())
+        b.
     else:
         print("ERORR: expected 2 inputs")
 
-# Allows the code to be ran from either python or a terminal
 
 if __name__ == "__main__":
     #If ran from a shell or terminal then takes 2 system arguments
     arguments = sys.argv[1:]
     print(arguments)
     main(arguments)
-else:
-    #If ran from file then main is called after taking 2 user inputs
-    rWidth = float(input("Enter a value for the length of the roll: "))
-    cWidth = float(input("Enter a value for the dimensions of the cube:"))
-    args = [rWidth, cWidth]
-    main(args)

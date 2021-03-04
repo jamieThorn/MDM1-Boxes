@@ -4,9 +4,12 @@ import configure as cg
 
 
 class handler:
+    #Graph definition is the ammount of values considered when plotting the graph
     definition = cg.settings().graphDefinition
+    #Range is the values either side of the user input between which the graph is plotted
     range = cg.settings().graphRange
 
+# Creates a graph comparing how waste varies as the cube length is altered
     def compareVariablebCube(self, func, Xval, constants):
         Xval = int(Xval)
         if (Xval - self.range) > 0:
@@ -25,6 +28,7 @@ class handler:
         plt.ylabel("Waste")
         plt.show()
 
+# Creates a graph comparing how waste varies as the roll width is altered
     def compareVariableWidth(self, func, Xval, constants):
         Xval = int(Xval)
         if (Xval - self.range) > 0:
