@@ -1,17 +1,17 @@
 import sys
 import configure as cg
-import wasteGraphs
+#import wasteGraphs as wg
 
 
+# Calculates overall waste by finding the area of unused roll and dividing this
+# by the overall area of roll used
 
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
     print(cubeD, netD, rollW, rollL, orientation)
-    areaOfRoll = rollL * rollW
     if orientation:
-        usedArea = (rollW // (netD[0] * cubeD)) * (rollL // ((netD[1] * cubeD) + (0.1 * cubeD))) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
-        usedArea = (rollW // ((netD[1] * cubeD) + (0.1 * cubeD))) * (rollL // (netD[0] * cubeD)) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
-    return areaOfRoll - usedArea
+        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
 
 
 class box:
@@ -21,11 +21,15 @@ class box:
     rollLength = 0.0
     areaOfRoll = 0.0
 
+# Sets values for the cube's width and for the roll's dimensions and area
+
     def __init__(self, cDimensions, rWidth, rLength):
         self.cubeWidth = float(cDimensions)
         self.rollWidth = float(rWidth)
         self.rollLength = float(rLength)
         self.areaOfRoll = float(self.rollLength * self.rollWidth)
+
+# Functions for accessing the previously mentioned values
 
     def accessCube(self):
         c = self.cubeWidth
@@ -50,54 +54,51 @@ class efficientNet(box):
     #size of the cube
     netDimensions = []
 
+# Defines the dimensions of the net by taking cube width and multiplying by 2
+# for the width of the net and multiplying by 4 for the length of the net
+
     def __init__(self, cDimensions, rWidth, rLength):
         box.__init__(self, cDimensions, rWidth, rLength)
         self.netDimensions = [2, 4]
-
+        
+# Accesses the net dimensions
+        
     def accessNet(self):
         nD = self.netDimensions
         return nD
 
-    def checkError(self):
-        if (self.accessNet()[0] * self.accessCube()) > self.accessRollW():
-            print("ERROR: Cube of this size cannot be supported by this roll length")
-            quit()
+# Checks to see whether the wasted cardboard is greater if the net is vertical
+# Or horizontal by comparing which net orientation has a greater waste. If true,
+# The horizontal has less waste. If false, the vertical has less waste
 
     def checkOrientation(self):
         #Retturns true if having the x-side agains the bottom of the roll
         #is most efficient if not returns false
         xWaste = (self.accessNet()[0] * self.accessCube()) % self.accessRollW()
         yWaste = (self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube()) % self.accessRollW()
-        self.checkError()
-        if self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube() > self.accessRollW():
-            return True
-        elif xWaste <= yWaste:
+        if xWaste >= yWaste:
             return True
         else:
             return False
+
+# Calculates the waste of the orientation found to be most efficient
 
     def checkWaste(self):
         orientation = self.checkOrientation()
         waste = calcWaste(self.accessCube(), self.accessNet(), self.accessRollW(), self.accessRollL(), orientation)
         return waste
 
-    def displayGraphs(self):
-        h = wasteGraphs.handler()
-        orientation = self.checkOrientation()
-        cubeGraphConstants = [self.accessNet(), self.accessRollW(), self.accessRollL(), orientation]
-        rollWidthGraphConstants = [self.accessCube(), self.accessNet(), self.accessRollL(), orientation]
-        h.compareVariablebCube(calcWaste, self.accessCube(), cubeGraphConstants)
-        h.compareVariableWidth(calcWaste, self.accessRollW(), rollWidthGraphConstants)
-
+# Checks that 2 inputs are inputted and calculates and prints the wasted
+# cardboard
 
 def main(sysArgs):
     if len(sysArgs) == 2:
         b = efficientNet(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
         print(b.checkWaste())
-        b.displayGraphs()
     else:
         print("ERORR: expected 2 inputs")
 
+# Allows the code to be ran from either python or a terminal
 
 if __name__ == "__main__":
     #If ran from a shell or terminal then takes 2 system arguments
