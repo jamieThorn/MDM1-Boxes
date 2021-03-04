@@ -1,16 +1,18 @@
 import sys
 import configure as cg
-#import wasteGraphs as wg
+import wasteGraphs
 
 
 # Calculates overall waste by finding the area of unused roll and dividing this
 # by the overall area of roll used
 
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
+    areaOfRoll = rollL * rollW
     if orientation:
-        return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        usedArea = (rollW // (netD[0] * cubeD)) * (rollL // ((netD[1] * cubeD) + (0.1 * cubeD))) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
-        return (rollW * rollL) - ((netD[1] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+        usedArea = (rollW // ((netD[1] * cubeD) + (0.1 * cubeD))) * (rollL // (netD[0] * cubeD)) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
+    return areaOfRoll - usedArea 
 
 
 class box:
@@ -88,12 +90,12 @@ class efficientNet(box):
 # Uses the wasteGraphs scipt to generate graphs showing why the user may
 # wish to alter there cube size or rollw Width
     def displayGraphs(self):
-    h = wasteGraphs.handler()
-    orientation = self.checkOrientation()
-    cubeGraphConstants = [self.accessNet(), self.accessRollW(), self.accessRollL(), orientation]
-    rollWidthGraphConstants = [self.accessCube(), self.accessNet(), self.accessRollL(), orientation]
-    h.compareVariablebCube(calcWaste, self.accessCube(), cubeGraphConstants)
-    h.compareVariableWidth(calcWaste, self.accessRollW(), rollWidthGraphConstants)
+        h = wasteGraphs.handler()
+        orientation = self.checkOrientation()
+        cubeGraphConstants = [self.accessNet(), self.accessRollW(), self.accessRollL(), orientation]
+        rollWidthGraphConstants = [self.accessCube(), self.accessNet(), self.accessRollL(), orientation]
+        h.compareVariablebCube(calcWaste, self.accessCube(), cubeGraphConstants)
+        h.compareVariableWidth(calcWaste, self.accessRollW(), rollWidthGraphConstants)
 
 # Checks that 2 inputs are inputted and calculates and prints the wasted
 # cardboard and shows graphs of what happens as the cube and roll values vary
@@ -102,7 +104,7 @@ def main(sysArgs):
     if len(sysArgs) == 2:
         b = efficientNet(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
         print(b.checkWaste())
-        b.
+        b.displayGraphs()
     else:
         print("ERORR: expected 2 inputs")
 
