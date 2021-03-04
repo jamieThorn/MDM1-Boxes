@@ -7,7 +7,6 @@ import configure as cg
 # by the overall area of roll used
 
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
-    print(cubeD, netD, rollW, rollL, orientation)
     if orientation:
         return (rollW * rollL) - ((netD[0] * cubeD) // rollW) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
