@@ -12,9 +12,9 @@ class settings:
                 currentAtr = line.strip("\n")
                 currentAtr = currentAtr.split(" ")
                 attributes.append(currentAtr[-1])
-        self.rollLength = attributes[0]
-        self.graphDefinition = attributes[1]
-        self.graphRange = attributes[2]
+        self.rollLength = int(attributes[0])
+        self.graphDefinition = int(attributes[1])
+        self.graphRange = int(attributes[2])
 
     def accessRoll(self):
         rL = self.rollLength

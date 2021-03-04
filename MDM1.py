@@ -1,6 +1,7 @@
 import sys
 import configure as cg
-#import wasteGraphs as wg
+import wasteGraphs
+
 
 
 def calcWaste(cubeD, netD, rollW, rollL, orientation):
@@ -80,11 +81,20 @@ class efficientNet(box):
         waste = calcWaste(self.accessCube(), self.accessNet(), self.accessRollW(), self.accessRollL(), orientation)
         return waste
 
+    def displayGraphs(self):
+        h = wasteGraphs.handler()
+        orientation = self.checkOrientation()
+        cubeGraphConstants = [self.accessNet(), self.accessRollW(), self.accessRollL(), orientation]
+        rollWidthGraphConstants = [self.accessCube(), self.accessNet(), self.accessRollL(), orientation]
+        h.compareVariablebCube(calcWaste, self.accessCube(), cubeGraphConstants)
+        h.compareVariableWidth(calcWaste, self.accessRollW(), rollWidthGraphConstants)
+
 
 def main(sysArgs):
     if len(sysArgs) == 2:
         b = efficientNet(sysArgs[0], sysArgs[1], cg.settings().accessRoll())
         print(b.checkWaste())
+        b.displayGraphs()
     else:
         print("ERORR: expected 2 inputs")
 
