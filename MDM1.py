@@ -12,7 +12,7 @@ def calcWaste(cubeD, netD, rollW, rollL, orientation):
         usedArea = (rollW // (netD[0] * cubeD)) * (rollL // ((netD[1] * cubeD) + (0.1 * cubeD))) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
     else:
         usedArea = (rollW // ((netD[1] * cubeD) + (0.1 * cubeD))) * (rollL // (netD[0] * cubeD)) * (((netD[0] * cubeD) * (netD[1] * cubeD)) + (0.1 * cubeD * cubeD))
-    return areaOfRoll - usedArea 
+    return areaOfRoll - usedArea
 
 
 class box:
@@ -74,8 +74,8 @@ class efficientNet(box):
     def checkOrientation(self):
         #Retturns true if having the x-side agains the bottom of the roll
         #is most efficient if not returns false
-        xWaste = (self.accessNet()[0] * self.accessCube()) % self.accessRollW()
-        yWaste = (self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube()) % self.accessRollW()
+        xWaste = self.accessRollW() % (self.accessNet()[0] * self.accessCube())
+        yWaste = self.accessRollW() % (self.accessNet()[1] * self.accessCube() + 0.1 * self.accessCube())
         if xWaste >= yWaste:
             return True
         else:
